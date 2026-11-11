@@ -1001,7 +1001,7 @@ if (Number(state.best) > 100) {
 function save(){localStorage.setItem('mpiAksaraSunda',JSON.stringify(state));updateStats()}
 function markDone(id){if(!state.done.includes(id))state.done.push(id);save();alert('Hatur nuhun! Materi berhasil ditandaan rengse.')}
 function openPage(id){document.querySelectorAll('.content').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(id==='hasil')renderResults();if(id==='game')startGame();if(id==='evaluasi')startQuiz()}
-function updateStats(){let n=state.done.length,p=Math.round(n/6*100);$('doneCount').textContent=n+'/6';$('progressPct').textContent=p+'%';$('progressLabel').textContent=p+'%';$('progressBar').style.width=p+'%';$('bestScore').textContent=state.best===null?'—':state.best+'%'}
+function updateStats(){let n=state.done.length,p=Math.round(n/6*100);$('doneCount').textContent=n+'/6';$('progressPct').textContent=p+'%';$('progressLabel').textContent=p+'%';$('progressBar').style.width=p+'%';$('bestScore').textContent=state.best===null?'—':state.best}
 function renderResults(){let names={materi:'Pangwanoh',swara:'Aksara Swara',ngalagena:'Aksara Ngalagena',rarangken:'Rarangkén',latihan:'Maca jeung Nulis'};$('completedList').textContent=state.done.length?state.done.map(x=>names[x]||x).join(' · '):'Belum ada materi yang ditandai selesai.';let p=Math.round(state.done.length/6*100);$('resultBar').style.width=p+'%';$('resultPercent').textContent='Progres '+p+'%';$('resultScore').textContent=state.best===null?'—':state.best}
 function resetProgress(){if(confirm('Yakin ingin menghapus progres belajar di perangkat ini?')){state={done:[],best:null};save();renderResults()}}
 
