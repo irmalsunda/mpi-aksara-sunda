@@ -43,8 +43,100 @@
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.topbar{padding:13px 16px}.topmeta{display:none}.wrap{padding:17px 14px 40px}.hero{padding:23px 20px;border-radius:19px}.stats{gap:8px}.stat{padding:12px}.stat b{font-size:20px}.stat small{font-size:10px}.grid{gap:9px}.tile{padding:13px;min-height:130px}.section-head h2{font-size:18px}}
 </style>
 </head>
+
 <body>
-<div class="app">
+
+<div id="visitorGate" style="
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    background:#f4f7f2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    box-sizing:border-box;
+">
+    <form id="visitorForm" style="
+        width:100%;
+        max-width:420px;
+        background:white;
+        padding:28px;
+        border-radius:20px;
+        box-shadow:0 8px 30px rgba(0,0,0,.08);
+        box-sizing:border-box;
+    ">
+        <div style="text-align:center;margin-bottom:24px;">
+            <div style="font-size:42px;color:#39816f;">ᮃ</div>
+            <h2 style="color:#244b3c;margin:8px 0;">
+                Wilujeng Sumping!
+            </h2>
+            <p style="color:#66756c;font-size:14px;">
+                Hayu Diajar Aksara Sunda
+            </p>
+        </div>
+
+        <label for="visitorName">Ngaran lengkep</label>
+        <input
+            id="visitorName"
+            type="text"
+            placeholder="Tulis ngaran anjeun"
+            required
+            maxlength="80"
+            autocomplete="name"
+            style="
+                width:100%;
+                padding:13px;
+                margin:8px 0 18px;
+                border:1px solid #ccd8cf;
+                border-radius:10px;
+                box-sizing:border-box;
+                font-size:16px;
+            "
+        >
+
+        <label for="visitorClass">Kelas / Asal</label>
+        <input
+            id="visitorClass"
+            type="text"
+            placeholder="Conto: VII A, Guru, Umum"
+            required
+            maxlength="100"
+            style="
+                width:100%;
+                padding:13px;
+                margin:8px 0 20px;
+                border:1px solid #ccd8cf;
+                border-radius:10px;
+                box-sizing:border-box;
+                font-size:16px;
+            "
+        >
+
+        <button type="submit" style="
+            width:100%;
+            padding:14px;
+            border:0;
+            border-radius:10px;
+            background:#39816f;
+            color:white;
+            font-size:16px;
+            font-weight:700;
+            cursor:pointer;
+        ">
+            Asup ka MPI →
+        </button>
+
+        <p id="visitorMessage" style="
+            color:#b45309;
+            font-size:13px;
+            text-align:center;
+        "></p>
+    </form>
+</div>
+
+<div class="app" style="display:none;">
+
 <header class="topbar">
  <div class="brand"><div class="logo">ᮃ</div><div><strong>HAYU DIAJAR</strong><small>AKSARA SUNDA</small></div></div>
  <div class="topmeta">MEDIA PEMBELAJARAN INTERAKTIF · KELAS VII</div>
@@ -1549,6 +1641,104 @@ function buildNgalagenaTambahan() {
 buildLetters();
 buildNgalagenaTambahan();
 updateStats();
+
+// =====================================
+// MONITORING PENGUNJUNG MPI
+// =====================================
+
+const VISITOR_API =
+'https://script.google.com/macros/s/AKfycbxKZ7xOqBHaptQ3rMJs_ta3V8D6YIo5c5Ekc8P__Fj_eMOlhLottJUEFa6V76OR4N28/exec';
+
+const DEVICE_KEY = 'mpiVisitorDeviceId';
+const PROFILE_KEY = 'mpiVisitorProfile';
+
+function createDeviceId() {
+    if (crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+
+    return 'DEV-' + Date.now() + '-' +
+        Math.random().toString(36).substring(2, 12);
+}
+
+function sendVisitorData(profile, deviceId) {
+    const payload = {
+        deviceId: deviceId,
+        nama: profile.nama,
+        kelasAsal: profile.kelasAsal
+    };
+
+    fetch(VISITOR_API, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'text/plain;charset=UTF-8'
+        },
+        body: JSON.stringify(payload)
+    }).catch(error => {
+        console.error('Gagal ngirim data pengunjung:', error);
+    });
+}
+
+function enterMPI(profile, deviceId) {
+    document.getElementById('visitorGate').style.display = 'none';
+    document.querySelector('.app').style.display = 'block';
+
+    sendVisitorData(profile, deviceId);
+}
+
+// Mariksa naha browser geus kadaptar
+(function initVisitorMonitoring() {
+
+    const savedProfile = localStorage.getItem(PROFILE_KEY);
+    const savedDeviceId = localStorage.getItem(DEVICE_KEY);
+
+    if (savedProfile && savedDeviceId) {
+        try {
+            const profile = JSON.parse(savedProfile);
+            enterMPI(profile, savedDeviceId);
+            return;
+        } catch (error) {
+            console.error('Data pengunjung teu kabaca:', error);
+        }
+    }
+
+    // Lamun can kadaptar, tampilkeun formulir
+    document.getElementById('visitorGate').style.display = 'flex';
+})();
+
+// Prosés nalika formulir dikirim
+document.getElementById('visitorForm').addEventListener(
+    'submit',
+    function(event) {
+
+        event.preventDefault();
+
+        const nama = document.getElementById('visitorName')
+            .value.trim();
+
+        const kelasAsal = document.getElementById('visitorClass')
+            .value.trim();
+
+        if (!nama || !kelasAsal) {
+            return;
+        }
+
+        const profile = {
+            nama: nama,
+            kelasAsal: kelasAsal
+        };
+
+        const deviceId = createDeviceId();
+
+        // Simpen idéntitas browser
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+        localStorage.setItem(DEVICE_KEY, deviceId);
+
+        enterMPI(profile, deviceId);
+    }
+);
+
 </script>
 </body>
 </html>
