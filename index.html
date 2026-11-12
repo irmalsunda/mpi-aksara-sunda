@@ -244,22 +244,11 @@
         </button>
 
         <button class="tile"
-            onclick="openPage('game')">
-            <div class="ico">🎮</div>
-            <strong>Kaulinan</strong>
-            <small>
-                Diajar bari ulin
-            </small>
-        </button>
-
-        <button class="tile"
-            onclick="openPage('evaluasi')">
-            <div class="ico">✍️</div>
-            <strong>Meunteun Kamampuh</strong>
-            <small>
-                Nguji hasil diajar
-            </small>
-        </button>
+    onclick="openPage('evaluasi')">
+    <div class="ico">✍️</div>
+    <strong>Meunteun Kamampuh</strong>
+    <small>35 soal dina 4 level pikeun nguji hasil diajar</small>
+</button>
 
         <button class="tile"
             onclick="openPage('hasil')">
@@ -1014,48 +1003,57 @@
 
 
 
-<section id="game" class="content">
-    <button class="back" onclick="openPage('home')">← Balik ka Beranda</button>
+
+<section id="evaluasi" class="content">
+    <button class="back" onclick="openPage('home')">
+        ← Balik ka Beranda
+    </button>
 
     <div class="lesson-head">
-        <span class="eyebrow">KAULINAN INTERAKTIF</span>
+        <span class="eyebrow">MEUNTEUN KAMAMPUH</span>
         <h2>Petualangan Aksara Sunda</h2>
-        <p>Uji kamampuh maca jeung mikanyaho Aksara Sunda bari ulin!</p>
+        <p>
+            Uji kamampuh maca jeung mikanyaho Aksara Sunda
+            ngaliwatan opat level tantangan.
+        </p>
     </div>
 
     <div class="panel">
-        <h3>🎮 Tebak Aksara!</h3>
+        <h3>✍️ Tantangan Aksara Sunda</h3>
         <p>
-            Perhatikeun aksara atawa kecap anu ditampilkeun,
-            laju pilih jawaban anu pangbenerna.
+            Jawab 35 soal dina opat level. Unggal soal
+            dibéré waktu 15 detik.
         </p>
 
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:15px 0;">
-            <span class="badge" id="gameRound">Soal 1 tina 5</span>
-            <span class="badge">🏆 Tantangan Aksara</span>
+            <span class="badge" id="gameRound">Level 1 – Pangwanoh</span>
+            <span class="badge" id="gameTimer">Waktu: 15 detik</span>
         </div>
 
         <h3 id="gameQuestion"
             style="text-align:center;font-size:25px;margin:25px 0;">
-            Aksara ᮘ dibaca ...
+            Pencét tombol pikeun ngamimitian.
         </h3>
 
         <div id="gameOptions"></div>
-        <p class="hint" id="gameTimer">Waktu: 15 detik</p>
-        <div id="gameFeedback" class="feedback"></div>
+
+        <div id="gameFeedback" class="feedback">
+            Hayu urang mimitian!
+        </div>
 
         <button class="primary"
             id="nextGame"
-            style="display:none;margin-top:15px;"
+            style="margin-top:15px;"
             onclick="nextQuestion()">
-            Soal Saterusna →
+            Mimitian Meunteun Kamampuh →
         </button>
 
         <p class="hint" id="gameScore">
-            Sing sumanget! Kumpulkeun poin saloba-lobana.
+            Skor: 0
         </p>
     </div>
 </section>
+
 
 
 <section id="evaluasi" class="content">
@@ -1092,10 +1090,116 @@ if (Number(state.best) > 100) {
 }
 function save(){localStorage.setItem('mpiAksaraSunda',JSON.stringify(state));updateStats()}
 function markDone(id){if(!state.done.includes(id))state.done.push(id);save();alert('Hatur nuhun! Materi berhasil ditandaan rengse.')}
-function openPage(id){document.querySelectorAll('.content').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});if(id==='hasil')renderResults();if(id==='game')startGame();if(id==='evaluasi')startQuiz()}
-function updateStats(){let n=state.done.length,p=Math.round(n/6*100);$('doneCount').textContent=n+'/6';$('progressPct').textContent=p+'%';$('progressLabel').textContent=p+'%';$('progressBar').style.width=p+'%';$('bestScore').textContent=state.best===null?'—':state.best}
-function renderResults(){let names={materi:'Pangwanoh',swara:'Aksara Swara',ngalagena:'Aksara Ngalagena',rarangken:'Rarangkén',latihan:'Maca jeung Nulis'};$('completedList').textContent=state.done.length?state.done.map(x=>names[x]||x).join(' · '):'Belum ada materi yang ditandai selesai.';let p=Math.round(state.done.length/6*100);$('resultBar').style.width=p+'%';$('resultPercent').textContent='Progres '+p+'%';$('resultScore').textContent=state.best===null?'—':state.best}
-function resetProgress(){if(confirm('Yakin ingin menghapus progres belajar di perangkat ini?')){state={done:[],best:null};save();renderResults()}}
+function openPage(id) {
+    document.querySelectorAll('.content').forEach(x =>
+        x.classList.remove('active')
+    );
+
+    $(id).classList.add('active');
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+
+    if (id === 'hasil') {
+        renderResults();
+    }
+
+    if (id === 'evaluasi') {
+        startGame();
+    }
+}
+
+const lessonIds = [
+    'materi',
+    'swara',
+    'ngalagena',
+    'rarangken',
+    'latihan'
+];
+
+function save() {
+    localStorage.setItem('mpiAksaraSunda', JSON.stringify(state));
+    updateStats();
+}
+
+function markDone(id) {
+    if (!state.done.includes(id)) {
+        state.done.push(id);
+    }
+
+    save();
+    alert('Hatur nuhun! Materi berhasil ditandaan rengse.');
+}
+
+function updateStats() {
+    const completed = lessonIds.filter(id =>
+        state.done.includes(id)
+    ).length;
+
+    const percent = Math.min(
+        100,
+        Math.round(completed / lessonIds.length * 100)
+    );
+
+    $('doneCount').textContent =
+        completed + '/' + lessonIds.length;
+
+    $('progressPct').textContent = percent + '%';
+    $('progressLabel').textContent = percent + '%';
+    $('progressBar').style.width = percent + '%';
+
+    $('bestScore').textContent =
+        state.best === null ? '—' : state.best;
+}
+
+
+function renderResults() {
+    const names = {
+        materi: 'Pangwanoh',
+        swara: 'Aksara Swara',
+        ngalagena: 'Aksara Ngalagena',
+        rarangken: 'Rarangkén',
+        latihan: 'Maca jeung Nulis'
+    };
+
+    const completed = lessonIds.filter(id =>
+        state.done.includes(id)
+    );
+
+    $('completedList').textContent = completed.length
+        ? completed.map(id => names[id]).join(' · ')
+        : 'Can aya matéri anu ditandaan réngsé.';
+
+    const percent = Math.round(
+        completed.length / lessonIds.length * 100
+    );
+
+    $('resultBar').style.width = percent + '%';
+    $('resultPercent').textContent = 'Progres ' + percent + '%';
+
+    $('resultScore').textContent =
+        state.best === null ? '—' : state.best;
+}
+
+function resetProgress() {
+    const yakin = confirm(
+        'Yakin rék ngahapus sakabéh kamajuan diajar jeung peunteun?'
+    );
+
+    if (!yakin) return;
+
+    state.done = [];
+    state.best = null;
+
+    save();
+    renderResults();
+
+    alert('Kamajuan diajar jeung peunteun geus hasil direset.');
+}
+
+
 
 function buildLetters() {
 
@@ -1386,191 +1490,274 @@ const gameLevels = [
   }
 ];
 
+const questions = [
+    {
+        q: "Naon anu dimaksud Aksara Sunda?",
+        o: [
+            "Sistem tulisan pikeun nuliskeun basa Sunda",
+            "Lambang pikeun ngitung angka",
+            "Tanda pikeun maca musik",
+            "Gambar pikeun nepikeun carita"
+        ],
+        a: "Sistem tulisan pikeun nuliskeun basa Sunda"
+    },
+    {
+        q: "Sabaraha jumlah Aksara Swara dina Aksara Sunda Baku?",
+        o: ["Lima", "Genep", "Tujuh", "Dalapan"],
+        a: "Tujuh"
+    },
+    {
+        q: "Aksara ᮊ dibaca ...",
+        o: ["Ga", "Ka", "Ta", "Pa"],
+        a: "Ka"
+    },
+    {
+        q: "Rarangkén panghulu ngarobah sora /a/ jadi ...",
+        o: ["I", "U", "É", "O"],
+        a: "I"
+    },
+    {
+        q: "Naon fungsi rarangkén pamaéh?",
+        o: [
+            "Nambahkeun sora /i/",
+            "Ngarobah sora /a/ jadi /u/",
+            "Ngaleungitkeun vokal bawaan /a/",
+            "Nambahkeun sora /ng/"
+        ],
+        a: "Ngaleungitkeun vokal bawaan /a/"
+    }
+];
+
+let quizIndex = 0;
+let quizAnswers = [];
+let quizLock = false;
+
+
 let gameLevel = 0;
 let gameIndex = 0;
 let gameScore = 0;
 let gameLock = false;
 let gameTimeLeft = 15;
 let gameTimer = null;
+let assessmentStarted = false;
+
+const assessmentLevels = [
+    ...gameLevels,
+    {
+        name: 'Level 4 – Evaluasi Pamungkas',
+        questions: questions
+    }
+];
 
 function startGame() {
-  clearInterval(gameTimer);
+    clearInterval(gameTimer);
 
-  gameLevel = 0;
-  gameIndex = 0;
-  gameScore = 0;
-  gameLock = false;
+    gameLevel = 0;
+    gameIndex = 0;
+    gameScore = 0;
+    gameLock = false;
+    assessmentStarted = false;
 
-  renderGame();
+    $('gameRound').textContent = 'Level 1 – Pangwanoh';
+    $('gameQuestion').textContent =
+        'Siap nguji kamampuh Aksara Sunda?';
+
+    $('gameOptions').innerHTML = '';
+    $('gameFeedback').innerHTML =
+        'Pencét tombol di handap pikeun ngamimitian.';
+
+    $('gameScore').textContent = 'Skor: 0';
+
+    $('nextGame').textContent =
+        'Mimitian Meunteun Kamampuh →';
+
+    $('nextGame').style.display = 'inline-block';
+    $('nextGame').onclick = startAssessment;
+
+    $('gameTimer').textContent = 'Waktu: 15 detik';
+}
+
+function startAssessment() {
+    clearInterval(gameTimer);
+
+    gameLevel = 0;
+    gameIndex = 0;
+    gameScore = 0;
+    gameLock = false;
+    assessmentStarted = true;
+
+    renderGame();
 }
 
 function renderGame() {
-  clearInterval(gameTimer);
+    clearInterval(gameTimer);
 
-  const questions = gameLevels[gameLevel].questions;
-  const q = questions[gameIndex];
+    const level = assessmentLevels[gameLevel];
+    const q = level.questions[gameIndex];
 
-  gameLock = false;
-  gameTimeLeft = 15;
+    gameLock = false;
+    gameTimeLeft = 15;
 
-  $('gameRound').textContent =
-    `${gameLevels[gameLevel].name} | Soal ${gameIndex+1} dari 10`;
+    $('gameRound').textContent =
+        `${level.name} | Soal ${gameIndex + 1} tina ${level.questions.length}`;
 
-  $('gameQuestion').textContent = q.q;
-  $('gameOptions').innerHTML = '';
-  $('gameFeedback').innerHTML = '';
-  $('nextGame').style.display = 'none';
-  $('nextGame').textContent = 'Soal Saterusna →';
-  $('nextGame').onclick = nextQuestion;
+    $('gameQuestion').textContent = q.q;
+    $('gameOptions').innerHTML = '';
+    $('gameFeedback').innerHTML = '';
 
-  $('gameScore').textContent = 'Skor: ' + gameScore;
+    $('nextGame').style.display = 'none';
+    $('nextGame').textContent = 'Soal Saterusna →';
+    $('nextGame').onclick = nextQuestion;
 
-  updateGameTimer();
+    $('gameScore').textContent = 'Skor: ' + gameScore;
 
-  q.o.forEach(v => {
-  let b = document.createElement('button');
-
-  b.type = 'button';
-  b.textContent = v;
-
-  b.style.display = 'inline-block';
-  b.style.visibility = 'visible';
-  b.style.opacity = '1';
-  b.style.margin = '6px';
-  b.style.padding = '12px 24px';
-  b.style.border = '1px solid #cbd5c0';
-  b.style.borderRadius = '12px';
-  b.style.background = '#ffffff';
-  b.style.color = '#244b3c';
-  b.style.cursor = 'pointer';
-
-  b.onclick = () => checkGameAnswer(v, b);
-
-  $('gameOptions').appendChild(b);
-});
-console.log("Soal:", q);
-console.log("Pilihan:", q.o);
-console.log("Jumlah tombol:", $('gameOptions').children.length);
-
-  gameTimer = setInterval(() => {
-    gameTimeLeft--;
     updateGameTimer();
 
-    if (gameTimeLeft <= 0) {
-      clearInterval(gameTimer);
-      if (!gameLock) {
-        gameLock = true;
-        $('gameFeedback').innerHTML =
-          `<div class="feedback">Waktuna béak! Jawaban anu bener: ${q.a}</div>`;
-        $('nextGame').style.display = 'inline-block';
-      }
-    }
-  }, 1000);
+    q.o.forEach(v => {
+        const b = document.createElement('button');
+
+        b.type = 'button';
+        b.className = 'quiz-option';
+        b.textContent = v;
+
+        b.onclick = () => checkGameAnswer(v, b);
+
+        $('gameOptions').appendChild(b);
+    });
+
+    gameTimer = setInterval(() => {
+        gameTimeLeft--;
+        updateGameTimer();
+
+        if (gameTimeLeft <= 0) {
+            clearInterval(gameTimer);
+
+            if (!gameLock) {
+                gameLock = true;
+
+                $('gameFeedback').innerHTML =
+                    `<div class="feedback">
+                        Waktuna béak! Jawaban anu bener: ${q.a}
+                    </div>`;
+
+                $('nextGame').style.display = 'inline-block';
+            }
+        }
+    }, 1000);
 }
 
 function updateGameTimer() {
-  const timer = $('gameTimer');
-  if (timer) {
-    timer.textContent = 'Waktu: ' + gameTimeLeft + ' detik';
-  }
+    $('gameTimer').textContent =
+        'Waktu: ' + gameTimeLeft + ' detik';
 }
 
 function checkGameAnswer(answer, button) {
-  if (gameLock) return;
+    if (gameLock) return;
 
-  gameLock = true;
-  clearInterval(gameTimer);
+    gameLock = true;
+    clearInterval(gameTimer);
 
-  const q = gameLevels[gameLevel].questions[gameIndex];
-  const correct = answer === q.a;
+    const q = assessmentLevels[gameLevel].questions[gameIndex];
+    const correct = answer === q.a;
 
-  if (correct) {
-    gameScore += 100;
-    button.classList.add('selected');
-  }
+    if (correct) {
+        gameScore += 100;
+        button.classList.add('selected');
+    }
 
-  $('gameFeedback').innerHTML = correct
-    ? '<div class="feedback">Bener! Manéh meunang 100 poin.</div>'
-    : `<div class="feedback">Can bener. Jawaban anu bener: ${q.a}</div>`;
+    $('gameFeedback').innerHTML = correct
+        ? '<div class="feedback">Bener! Meunang 100 poin.</div>'
+        : `<div class="feedback">Can bener. Jawaban anu bener: ${q.a}</div>`;
 
-  $('gameScore').textContent = 'Skor: ' + gameScore;
-  $('nextGame').style.display = 'inline-block';
+    $('gameScore').textContent = 'Skor: ' + gameScore;
+    $('nextGame').style.display = 'inline-block';
 }
 
 function nextQuestion() {
-  const totalQuestions = gameLevels[gameLevel].questions.length;
+    const totalQuestions =
+        assessmentLevels[gameLevel].questions.length;
 
-  if (gameIndex < totalQuestions - 1) {
-    gameIndex++;
-    renderGame();
-    return;
-  }
+    if (gameIndex < totalQuestions - 1) {
+        gameIndex++;
+        renderGame();
+        return;
+    }
 
-  if (gameLevel < gameLevels.length - 1) {
-    gameLevel++;
-    gameIndex = 0;
+    if (gameLevel < assessmentLevels.length - 1) {
+        gameLevel++;
+        gameIndex = 0;
 
-    $('gameFeedback').innerHTML =
-      `<div class="feedback">Hébat! Manéh geus ngaréngsékeun ${gameLevels[gameLevel-1].name}. Ayeuna lanjut ka ${gameLevels[gameLevel].name}!</div>`;
+        $('gameFeedback').innerHTML =
+            `<div class="feedback">
+                Hébat! Level saméméhna geus réngsé.
+                Ayeuna urang lanjut ka ${assessmentLevels[gameLevel].name}.
+            </div>`;
 
-    $('gameOptions').innerHTML = '';
-    $('nextGame').textContent = 'Mimitian lével saterusna →';
-    $('nextGame').style.display = 'inline-block';
-    $('nextGame').onclick = () => {
-      $('nextGame').onclick = null;
-      renderGame();
-    };
-    return;
-  }
+        $('gameOptions').innerHTML = '';
+        $('nextGame').textContent =
+            'Mimitian level saterusna →';
 
-  finishGame();
+        $('nextGame').style.display = 'inline-block';
+        $('nextGame').onclick = () => {
+            renderGame();
+        };
+
+        return;
+    }
+
+    finishGame();
 }
 
 function finishGame() {
-  clearInterval(gameTimer);
+    clearInterval(gameTimer);
 
-  let predicate = 'Terus latihan, pasti bisa!';
-  if (gameScore >= 2700) predicate = 'Istiméwa! Pangaweruh aksarana hébat jasa!';
-  else if (gameScore >= 2100) predicate = 'Hadé jasa! Geus ngarti kana aksara Sunda.';
-  else if (gameScore >= 1500) predicate = 'Biang! Terus tingkatkeun kamampuhna.';
-  else if (gameScore >= 900) predicate = 'Cukup saé. Hayu diajar deui!';
+    const totalQuestions = assessmentLevels.reduce(
+        (total, level) => total + level.questions.length,
+        0
+    );
 
-  $('gameRound').textContent = 'Kaulinan réngsé!';
-  $('gameQuestion').textContent = 'Wilujeng! Maranéh geus ngaréngsékeun sakabéh lével.';
-  $('gameOptions').innerHTML = '';
-  $('gameFeedback').innerHTML =
-    `<div class="feedback">
-      <h3>Skor Ahir: ${gameScore} / 3000</h3>
-      <p>${predicate}</p>
-    </div>`;
+    const maxScore = totalQuestions * 100;
+    const finalScore = Math.round(gameScore / maxScore * 100);
 
-  $('gameScore').textContent = '30 soal parantos réngsé.';
-  $('nextGame').textContent = 'Ulang deui kaulinan ↻';
-  $('nextGame').style.display = 'inline-block';
-  $('nextGame').onclick = restartGame;
+    let predicate = 'Terus latihan, pasti bisa!';
 
-  const gamePercent = Math.round(gameScore / 3000 * 100);
+    if (finalScore >= 90) {
+        predicate = 'Istiméwa! Pangaweruh aksarana hébat jasa!';
+    } else if (finalScore >= 80) {
+        predicate = 'Hadé jasa! Geus ngarti kana Aksara Sunda.';
+    } else if (finalScore >= 60) {
+        predicate = 'Cukup saé. Hayu tingkatkeun deui kamampuhna.';
+    }
 
-state.best = Math.max(state.best || 0, gamePercent);
+    $('gameRound').textContent = 'Meunteun Kamampuh réngsé!';
+    $('gameQuestion').textContent =
+        'Wilujeng! Anjeun geus ngaréngsékeun sakabéh soal.';
 
-save();
-markDone('game');
+    $('gameOptions').innerHTML = '';
+
+    $('gameFeedback').innerHTML =
+        `<div class="feedback">
+            <h3>Peunteun Ahir: ${finalScore}/100</h3>
+            <p>Jawaban bener: ${gameScore / 100} tina ${totalQuestions} soal.</p>
+            <p>${predicate}</p>
+        </div>`;
+
+    $('gameTimer').textContent = 'Réngsé!';
+    $('gameScore').textContent =
+        'Jumlah soal: ' + totalQuestions;
+
+    $('nextGame').textContent = 'Ulang Meunteun Kamampuh ↻';
+    $('nextGame').style.display = 'inline-block';
+    $('nextGame').onclick = startAssessment;
+
+    state.best = Math.max(
+        Number(state.best) || 0,
+        finalScore
+    );
+
+    save();
 }
 
-function restartGame() {
-  clearInterval(gameTimer);
-  gameLevel = 0;
-  gameIndex = 0;
-  gameScore = 0;
-  gameLock = false;
-
-  $('nextGame').onclick = null;
-  renderGame();
-}
-
-function startQuiz(){quizIndex=0;quizAnswers=[];quizLock=false;$('quizPanel').innerHTML='<div class="badge" id="quizNum">Soal 1 dari 5</div><h3 id="quizQuestion" style="margin-top:13px"></h3><div id="quizOptions"></div><button class="primary" id="quizNext" onclick="submitQuiz()">Periksa jawaban</button><div id="quizFeedback"></div>';renderQuiz()}
-function renderQuiz(){let q=questions[quizIndex];$('quizNum').textContent=`Soal ${quizIndex+1} dari 5`;$('quizQuestion').textContent=q.q;$('quizOptions').innerHTML='';$('quizFeedback').innerHTML='';$('quizNext').textContent='Periksa jawaban';quizLock=false;q.o.forEach(v=>{let b=document.createElement('button');b.className='quiz-option';b.textContent=v;b.onclick=()=>{if(quizLock)return;quizAnswers[quizIndex]=v;document.querySelectorAll('#quizOptions button').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};$('quizOptions').append(b)})}
-function submitQuiz(){if(quizLock){if(quizIndex<4){quizIndex++;renderQuiz()}else{let score=questions.reduce((n,q,i)=>n+(quizAnswers[i]===q.a?1:0),0)*20;$('quizPanel').innerHTML=`<h2>Evaluasi réngsé!</h2><div style="font-size:48px;color:var(--green);font-weight:800">${score}/100</div><p>${score>=80?'Hebat! Pamahaman anjeun saé.':'Terus latihan. Baca deui materi yang belum dikuasai.'}</p><button class="primary" onclick="openPage('home')">Balik ka beranda</button>`;state.best=Math.max(state.best||0,score);state.done.push('evaluasi');save()}return}if(!quizAnswers[quizIndex]){ $('quizFeedback').innerHTML='<div class="feedback">Pilih salah satu jawaban terlebih dahulu.</div>';return}quizLock=true;let ok=quizAnswers[quizIndex]===questions[quizIndex].a;$('quizFeedback').innerHTML=`<div class="feedback">${ok?'Bener! Jawaban benar.':'Can Bener. Jawaban: '+questions[quizIndex].a}</div>`;$('quizNext').textContent=quizIndex===4?'Lihat hasil':'Lanjut soal →'}
 function pilihSwara(jawaban) {
 
     const hasil = document.getElementById("jawabanSwara");
