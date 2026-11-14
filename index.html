@@ -18,6 +18,7 @@
 
 #practiceGlyph,
 #gameQuestion,
+.sundanese-number,
 .logo{
     font-family:'Noto Sans Sundanese',sans-serif;
 }.letter b{display:block;color:var(--green)}.letter.active{border:2px solid var(--green);background:#eef4ed}.hint{font-size:12px;color:var(--muted)}.quiz-option{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);padding:12px;border-radius:11px;margin:8px 0}.quiz-option.selected{border:2px solid var(--green);background:#edf4ed}.feedback{padding:12px;border-radius:11px;margin-top:12px;background:#eef4ed}.navrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.navrow button{border:1px solid var(--line);background:white;border-radius:999px;padding:8px 13px;color:var(--green)}.navrow button.active{background:var(--green);color:white}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:35px}.badge{display:inline-block;background:#e8efe8;color:#315d46;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700}
@@ -232,6 +233,13 @@
             <small>
                 Mikanyaho tanda aksara
             </small>
+        </button>
+
+        <button class="tile"
+            onclick="openPage('angka')">
+            <div class="ico">🔢</div>
+            <strong>Angka Sunda</strong>
+            <small>Mikanyaho lambang jeung aturan nulis angka</small>
         </button>
 
         <button class="tile"
@@ -948,13 +956,67 @@
 
     <div class="panel">
         <button class="primary"
-            onclick="markDone('rarangken');openPage('latihan')">
+            onclick="markDone('rarangken');openPage('angka')">
             Tandaan réngsé &amp; lanjut →
         </button>
     </div>
 </section>
 
 
+
+<section id="angka" class="content">
+    <button class="back" onclick="openPage('home')">← Balik ka Beranda</button>
+    <div class="lesson-head">
+        <span class="eyebrow">PANGAJARAN 05</span>
+        <h2>Angka Sunda</h2>
+        <p>Hayu mikawanoh lambang angka Sunda jeung aturan nuliskeunana.</p>
+    </div>
+    <div class="panel">
+        <h3>1. Naon ari Angka Sunda?</h3>
+        <p>Angka Sunda nyaéta lambang angka dina Aksara Sunda Baku. Aya sapuluh lambang dasar, ti angka nol nepi ka salapan.</p>
+    </div>
+    <div class="panel">
+        <h3>2. Mikawanoh lambang angka 0–9</h3>
+        <p>Tengetan pasangan angka Latén jeung lambang angka Sundana.</p>
+        <div class="letter-grid" id="angkaGrid"></div>
+    </div>
+    <div class="panel">
+        <h3>3. Cara ngagabungkeun angka</h3>
+        <p>Angka Sunda ditulis ngaruntuy ti kénca ka katuhu. Unggal digit ditulis ku lambangna masing-masing, sarua jeung cara nulis angka Latén.</p>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;text-align:center">
+            <thead><tr><th style="padding:9px;border-bottom:1px solid var(--line)">Angka Latén</th><th style="padding:9px;border-bottom:1px solid var(--line)">Angka Sunda</th></tr></thead>
+            <tbody>
+              <tr><td style="padding:9px">10</td><td class="sundanese-number" style="padding:9px">|᮱᮰|</td></tr>
+              <tr><td style="padding:9px">25</td><td class="sundanese-number" style="padding:9px">|᮲᮵|</td></tr>
+              <tr><td style="padding:9px">77</td><td class="sundanese-number" style="padding:9px">|᮷᮷|</td></tr>
+              <tr><td style="padding:9px">100</td><td class="sundanese-number" style="padding:9px">|᮱᮰᮰|</td></tr>
+              <tr><td style="padding:9px">125</td><td class="sundanese-number" style="padding:9px">|᮱᮲᮵|</td></tr>
+              <tr><td style="padding:9px">2026</td><td class="sundanese-number" style="padding:9px">|᮲᮰᮲᮶|</td></tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+    <div class="panel">
+        <h3>4. Aturan nuliskeun angka</h3>
+        <ul>
+          <li>Angka ditulis ti kénca ka katuhu.</li>
+          <li>Unggal digit miboga lambang sorangan.</li>
+          <li>Dina runtuyan téks, kelompok angka Sunda diapit ku tanda pipa (| ... |) pikeun ngabédakeunana tina aksara séjén.</li>
+        </ul>
+        <p>Contona, taun 2026 ditulis <strong class="sundanese-number">|᮲᮰᮲᮶|</strong>.</p>
+    </div>
+    <div class="panel">
+        <h3>5. Conto dina kalimah</h3>
+        <p>Umur kuring 12 taun: Umur kuring <strong class="sundanese-number">|᮱᮲|</strong> taun.</p>
+        <p>Jumlah buku aya 25: Jumlah buku aya <strong class="sundanese-number">|᮲᮵|</strong>.</p>
+    </div>
+    <div class="panel">
+        <h3>Geus réngsé diajar?</h3>
+        <p>Sanggeus mikawanoh lambang jeung aturan angka Sunda, tandaan ieu pangajaran geus réngsé.</p>
+        <button class="primary" onclick="markDone('angka');openPage('latihan')">Tandaan réngsé &amp; latihan →</button>
+    </div>
+</section>
 
 <section id="latihan" class="content">
     <button class="back" onclick="openPage('home')">← Balik ka Beranda</button>
@@ -1056,11 +1118,7 @@
 
 
 
-<section id="evaluasi" class="content">
- <button class="back" onclick="openPage('home')">← Beranda</button>
- <div class="lesson-head"><span class="eyebrow">EVALUASI</span><h2>Uji Pamahaman</h2><p>Jawab lima soal pilihan ganda.</p></div>
- <div class="panel" id="quizPanel"><div class="badge" id="quizNum">Soal 1 dari 5</div><h3 id="quizQuestion" style="margin-top:13px"></h3><div id="quizOptions"></div><button class="primary" id="quizNext" onclick="submitQuiz()">Periksa jawaban</button><div id="quizFeedback"></div></div>
-</section>
+
 
 <section id="hasil" class="content">
  <button class="back" onclick="openPage('home')">← Beranda</button>
@@ -1068,7 +1126,7 @@
  <div class="panel"><h3>Materi yang sudah dipelajari</h3><p id="completedList">Belum ada materi yang ditandai selesai.</p><div class="progress"><span id="resultBar"></span></div><p id="resultPercent" class="hint">Progres 0%</p></div>
  <div class="panel"><h3>Skor evaluasi terbaik</h3><div style="font-size:38px;font-weight:800;color:var(--green)" id="resultScore">—</div><p class="hint">Skor tersimpan secara lokal di perangkat ini.</p><button class="secondary" onclick="resetProgress()">Reset progres belajar</button></div>
 </section>
-<footer class="footer">HAYU DIAJAR AKSARA SUNDA · MPI KELAS VII · Versi prototipe 1.0</footer>
+<footer class="footer">HAYU DIAJAR AKSARA SUNDA · MPI KELAS VII · Versi 1.1</footer>
 </main>
 </div>
 <script>
@@ -1089,7 +1147,7 @@ if (Number(state.best) > 100) {
     localStorage.setItem('mpiAksaraSunda', JSON.stringify(state));
 }
 function save(){localStorage.setItem('mpiAksaraSunda',JSON.stringify(state));updateStats()}
-function markDone(id){if(!state.done.includes(id))state.done.push(id);save();alert('Hatur nuhun! Materi berhasil ditandaan rengse.')}
+function markDone(id){if(!state.done.includes(id))state.done.push(id);save();alert('Hatur nuhun! Matéri berhasil ditandaan réngsé.')}
 function openPage(id) {
     document.querySelectorAll('.content').forEach(x =>
         x.classList.remove('active')
@@ -1116,6 +1174,7 @@ const lessonIds = [
     'swara',
     'ngalagena',
     'rarangken',
+    'angka',
     'latihan'
 ];
 
@@ -1130,7 +1189,7 @@ function markDone(id) {
     }
 
     save();
-    alert('Hatur nuhun! Materi berhasil ditandaan rengse.');
+    alert('Hatur nuhun! Matéri berhasil ditandaan réngsé.');
 }
 
 function updateStats() {
@@ -1161,6 +1220,7 @@ function renderResults() {
         swara: 'Aksara Swara',
         ngalagena: 'Aksara Ngalagena',
         rarangken: 'Rarangkén',
+        angka: 'Angka Sunda',
         latihan: 'Maca jeung Nulis'
     };
 
@@ -1290,6 +1350,27 @@ function buildLetters() {
 }
 
 
+function buildAngkaGrid() {
+    const data = [['᮰','0','nol'],['᮱','1','hiji'],['᮲','2','dua'],['᮳','3','tilu'],['᮴','4','opat'],['᮵','5','lima'],['᮶','6','genep'],['᮷','7','tujuh'],['᮸','8','dalapan'],['᮹','9','salapan']];
+    const grid = document.getElementById('angkaGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    data.forEach(([glyph,digit,word]) => {
+        const card = document.createElement('div');
+        card.className = 'letter';
+        const symbol = document.createElement('div');
+        symbol.className = 'glyph';
+        symbol.textContent = glyph;
+        const label = document.createElement('b');
+        label.textContent = digit;
+        const note = document.createElement('small');
+        note.textContent = word;
+        card.append(symbol,label,note);
+        grid.appendChild(card);
+    });
+}
+
+
 let practiceAnswered = false;
 let practiceIndex = 0;
 let practiceScore = 0;
@@ -1321,7 +1402,19 @@ const practiceQuestions = [
     {g:"ᮘᮦ",a:"bé",o:["ba","bi","bé","bo"]},
     {g:"ᮞᮧ",a:"so",o:["sa","se","su","so"]},
     {g:"ᮊᮢ",a:"kra",o:["ka","kra","kya","kla"]},
-    {g:"ᮊᮀ",a:"kang",o:["kar","kah","kang","ka"]}
+    {g:"ᮊᮀ",a:"kang",o:["kar","kah","kang","ka"]},
+
+    // E. Kecap Sunda
+    {g:"ᮘᮥᮊᮥ",a:"buku",o:["buku","buka","baki","bako"]},
+    {g:"ᮘᮞ",a:"basa",o:["bisa","basa","busa","besa"]},
+    {g:"ᮌᮥᮛᮥ",a:"guru",o:["gari","guru","giru","gora"]},
+    {g:"ᮞᮊᮧᮜ",a:"sakola",o:["sakala","sakola","sikola","sakula"]},
+    {g:"ᮄᮙᮂ",a:"imah",o:["imah","amah","umah","emah"]},
+    {g:"ᮙᮥᮛᮤᮓ᮪",a:"murid",o:["murid","murit","marid","mured"]},
+
+    // F. Angka Sunda
+    {g:"|᮱᮵|",a:"15",o:["12","15","51","25"]},
+    {g:"|᮲᮰᮲᮶|",a:"2026",o:["2025","2026","2062","2006"]}
 ];
 
 function renderPractice() {
@@ -1492,39 +1585,29 @@ const gameLevels = [
 
 const questions = [
     {
-        q: "Naon anu dimaksud Aksara Sunda?",
-        o: [
-            "Sistem tulisan pikeun nuliskeun basa Sunda",
-            "Lambang pikeun ngitung angka",
-            "Tanda pikeun maca musik",
-            "Gambar pikeun nepikeun carita"
-        ],
-        a: "Sistem tulisan pikeun nuliskeun basa Sunda"
+        q: "Kecap ᮘᮥᮊᮥ dibaca ...",
+        o: ["basa", "buku", "buka", "baki"],
+        a: "buku"
     },
     {
-        q: "Sabaraha jumlah Aksara Swara dina Aksara Sunda Baku?",
-        o: ["Lima", "Genep", "Tujuh", "Dalapan"],
-        a: "Tujuh"
+        q: "Kumaha tulisan Aksara Sunda pikeun kecap 'guru'?",
+        o: ["ᮌᮥᮛᮥ", "ᮌᮧᮛᮧ", "ᮊᮥᮛᮥ", "ᮌᮥᮜᮥ"],
+        a: "ᮌᮥᮛᮥ"
     },
     {
-        q: "Aksara ᮊ dibaca ...",
-        o: ["Ga", "Ka", "Ta", "Pa"],
-        a: "Ka"
+        q: "Angka Sunda |᮲᮵| nuduhkeun angka ...",
+        o: ["15", "25", "52", "20"],
+        a: "25"
     },
     {
-        q: "Rarangkén panghulu ngarobah sora /a/ jadi ...",
-        o: ["I", "U", "É", "O"],
-        a: "I"
+        q: "Kumaha tulisan angka 2026 dina angka Sunda?",
+        o: ["|᮲᮰᮲᮵|", "|᮲᮰᮲᮶|", "|᮲᮶᮲᮰|", "|᮲᮰᮶᮲|"],
+        a: "|᮲᮰᮲᮶|"
     },
     {
-        q: "Naon fungsi rarangkén pamaéh?",
-        o: [
-            "Nambahkeun sora /i/",
-            "Ngarobah sora /a/ jadi /u/",
-            "Ngaleungitkeun vokal bawaan /a/",
-            "Nambahkeun sora /ng/"
-        ],
-        a: "Ngaleungitkeun vokal bawaan /a/"
+        q: "Kecap ᮄᮙᮂ dibaca ...",
+        o: ["imah", "umah", "emah", "amah"],
+        a: "imah"
     }
 ];
 
@@ -1827,6 +1910,7 @@ function buildNgalagenaTambahan() {
 
 buildLetters();
 buildNgalagenaTambahan();
+buildAngkaGrid();
 updateStats();
 
 // =====================================
